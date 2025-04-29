@@ -29,10 +29,22 @@ export function StackedTestimonials({ testimonials }: StackedTestimonialsProps) 
   }
 
   return (
-    <div className="relative w-full max-w-md mx-auto h-[400px]">
+    <div className="w-full flex justify-center">
+    <div className="flex justify-center items-center gap-2 w-1/2 ">
+    <button
+    onClick={handlePrev}
+    className="w-10 h-10 rounded-full bg-[#718355] text-white flex items-center justify-center hover:bg-[#87986A] transition-colors"
+  >
+    &larr;
+  </button>
+    <div className="relative  gap-4 w-full max-w-md mx-auto h-[400px]">
+        
+       
+       
+      
       <AnimatePresence mode="popLayout">
         {testimonials.map((testimonial, index) => {
-          // Calculate the position in the stack relative to the active index
+          
           const position = (index - activeIndex + testimonials.length) % testimonials.length
 
           // Only render the top 3 cards for performance
@@ -88,21 +100,15 @@ export function StackedTestimonials({ testimonials }: StackedTestimonialsProps) 
           )
         })}
       </AnimatePresence>
+     
 
-      <div className="absolute bottom-[-60px] left-0 right-0 flex justify-center space-x-4">
-        <button
-          onClick={handlePrev}
-          className="w-10 h-10 rounded-full bg-[#718355] text-white flex items-center justify-center hover:bg-[#87986A] transition-colors"
-        >
-          &larr;
-        </button>
-        <button
-          onClick={handleNext}
-          className="w-10 h-10 rounded-full bg-[#718355] text-white flex items-center justify-center hover:bg-[#87986A] transition-colors"
-        >
-          &rarr;
-        </button>
-      </div>
+      
     </div>
+     <button
+     onClick={handleNext}
+     className="w-10 h-10 rounded-full bg-[#718355] text-white flex items-center justify-center hover:bg-[#87986A] transition-colors"
+   >
+     &rarr;
+   </button></div></div>
   )
 }
