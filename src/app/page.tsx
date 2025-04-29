@@ -1,50 +1,28 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ChevronRight, ShoppingBag, Star } from "lucide-react"
+import HomeImageList from "@/components/ui/imagecard"
+import Header from "@/components/header"
 
 import { Button } from "@/components/ui/button"
 
 import { StackedTestimonials } from "@/components/stacked-testimonials"
 
 export default function Home() {
+  
   return (
-    <div className="flex flex-col gap-10 items-center min-h-screen">
+    <div className="flex gap-10 w-screen flex-col  min-h-screen">
+      <Header/>
       {/* Hero Section */}
-      <section className="w-full  h-screen flex justify-center bg-[#B5C99A]/20">
-        <div className="container ">
-          <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
-            <div className="flex flex-col justify-center space-y-4">
-              <div className="space-y-2 relative">
-                
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-[#718355] relative z-10 pt-8">
-                  Faith-Inspired Products for Your Journey
-                </h1>
-                <p className="max-w-[600px] text-gray-600 md:text-xl mt-6">
-                  Discover our collection of thoughtfully crafted items that celebrate and strengthen your faith.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button className="bg-[#718355] hover:bg-[#87986A]">
-                  Shop Collection
-                  <ShoppingBag className="ml-2 h-4 w-4" />
-                </Button>
-                <Button variant="outline" className="border-[#718355] text-[#718355]">
-                  Learn More
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <Image
-                src="/placeholder.svg?height=550&width=550"
-                width={550}
-                height={550}
-                alt="Christian products showcase"
-                className="rounded-lg object-cover"
-              />
-            </div>
-          </div>
-        </div>
+      <section className="w-full   justify-between text-black  flex items-center bg-[#B5C99A]/20">
+      <h1 className="mb-10 text-3xl font-extrabold">ሁሉም እምነት በአንድ ስፍራ!</h1>
+      <div>
+        <HomeImageList/>
+
+      
+    </div>
+
+
       </section>
 
       {/* Featured Categories */}
