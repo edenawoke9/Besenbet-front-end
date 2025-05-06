@@ -4,6 +4,7 @@ import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight, Heart, Minus, Plus, Share2, ShoppingBag, Star, Truck } from "lucide-react"
+import { addToCart } from "@/app/cart/cart"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -126,7 +127,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row">
-              <Button className="bg-[#718355] hover:bg-[#87986A] flex-1" size="lg">
+              <Button className="bg-[#718355] hover:bg-[#87986A] flex-1" size="lg" onClick={()=>addToCart({name:product.name,price:product.price,quantity:quantity,image:product.image,id:product.id})}>
                 <ShoppingBag className="mr-2 h-5 w-5" />
                 Add to Cart
               </Button>

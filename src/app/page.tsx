@@ -3,6 +3,7 @@ import Image from "next/image"
 import { ChevronRight, ShoppingBag, Star } from "lucide-react"
 import HomeImageList from "@/components/ui/imagecard"
 import Header from "@/components/header"
+import { addToCart } from "./cart/cart"
 
 import { Button } from "@/components/ui/button"
 
@@ -108,7 +109,7 @@ export default function Home() {
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <p className="font-bold text-[#718355]">${product.price.toFixed(2)}</p>
-                    <Button size="sm" className="bg-[#87986A] hover:bg-[#718355]">
+                    <Button size="sm" className="bg-[#87986A] hover:bg-[#718355]" >
                       Add to Cart
                     </Button>
                   </div>

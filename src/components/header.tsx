@@ -31,7 +31,7 @@ export default function Header() {
               alt="logo"
               width={80}
               height={80}
-              className="object-cover h-16 w-16"
+              className="object-cover -mt-4 h-16 w-16"
             />
             <h1 className={`${cinzel.className} text-xl font-bold text-[#718355]`}>
               BeSenbet
@@ -67,6 +67,16 @@ export default function Header() {
               }`}
             >
               About
+            </Link>
+            <Link
+              href="/cart"
+              className={`px-4 py-2 rounded-full transition-colors ${
+                isActive("/cart")
+                  ? "bg-[#edf1e7] text-[#718355] font-medium"
+                  : "text-black hover:bg-[#edf1e7] hover:text-[#718355]"
+              }`}
+            >
+              Cart
             </Link>
           </div>
         </nav>
