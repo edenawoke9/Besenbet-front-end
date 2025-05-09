@@ -1,3 +1,4 @@
+'use client'
 import Link from "next/link"
 import Image from "next/image"
 import { ChevronRight, ShoppingBag, Star } from "lucide-react"
@@ -5,18 +6,33 @@ import HomeImageList from "@/components/ui/imagecard"
 import Header from "@/components/header"
 import { addToCart } from "./cart/cart"
 
+
 import { Button } from "@/components/ui/button"
 
 import { StackedTestimonials } from "@/components/stacked-testimonials"
+import {useState} from 'react'
+
+const line=[
+  "Blessed Goods for a Faithful Life - Where Quality Meets Christian Values",
+  "Inspired Shopping for the Soul - Glorifying God in Every Purchase",
+   "Your Christian Marketplace - Serving with Love, Excellence, and Purpose"
+]
 
 export default function Home() {
+  let index=0
+  const [tagline,setLine]=useState(line[0])
+  setTimeout(() => {
+   index=index+1
+   setLine(line[index])
+    
+  }, 5000);
   
   return (
     <div className="flex gap-10 w-screen flex-col  min-h-screen">
       <Header/>
       {/* Hero Section */}
       <section className="w-full   justify-between text-black  flex items-center bg-[#B5C99A]/20">
-      <h1 className="mb-10 text-3xl font-extrabold">ሁሉም እምነት በአንድ ስፍራ!</h1>
+      <h1 className="mb-10 text-3xl w-full flex justify-center font-extrabold">{tagline}</h1>
       <div>
         <HomeImageList/>
 

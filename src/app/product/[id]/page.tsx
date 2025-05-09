@@ -32,7 +32,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <div className="container px-4 py-10 md:px-6 md:py-12 lg:py-16">
+    <div className="container px-4 py-10 text-black  md:px-6 md:py-12 lg:py-16">
       <div className="flex flex-col gap-2 pb-4">
         <nav className="flex gap-1 text-sm text-gray-500">
           <Link href="/" className="hover:text-[#718355] transition-colors">
