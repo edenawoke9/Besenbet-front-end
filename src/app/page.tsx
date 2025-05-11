@@ -25,14 +25,14 @@ export default function Home() {
    index=index+1
    setLine(line[index])
     
-  }, 5000);
+  }, 2000);
   
   return (
     <div className="flex gap-10 w-screen flex-col  min-h-screen">
       <Header/>
-      {/* Hero Section */}
+   
       <section className="w-full   justify-between text-black  flex items-center bg-[#B5C99A]/20">
-      <h1 className="mb-10 text-3xl w-full flex justify-center font-extrabold">{tagline}</h1>
+      <div className="mb-10  text-3xl w-full  flex justify-center font-extrabold"><h1 className="w-96">{tagline}</h1></div>
       <div>
         <HomeImageList/>
 
@@ -194,22 +194,22 @@ const categories = [
   {
     name: "Bibles & Books",
     slug: "bibles-books",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/bible.jpeg",
   },
   {
     name: "Jewelry",
     slug: "jewelry",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/cross.jpeg",
   },
   {
     name: "Home Decor",
     slug: "home-decor",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/homed.jpeg",
   },
   {
     name: "Apparel",
     slug: "apparel",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/apparel.webp",
   },
 ]
 
@@ -220,7 +220,7 @@ const products = [
     price: 29.99,
     rating: 5,
     reviews: 124,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/cross2.jpeg",
   },
   {
     id: 2,
@@ -228,7 +228,7 @@ const products = [
     price: 19.99,
     rating: 4,
     reviews: 86,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/journal.jpeg",
   },
   {
     id: 3,
@@ -236,7 +236,7 @@ const products = [
     price: 24.99,
     rating: 5,
     reviews: 52,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/faithover.webp",
   },
   {
     id: 4,
@@ -244,7 +244,7 @@ const products = [
     price: 39.99,
     rating: 5,
     reviews: 37,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/icon.jpeg",
   },
 ]
 
