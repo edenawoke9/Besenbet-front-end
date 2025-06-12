@@ -5,185 +5,234 @@ import { ChevronRight, ShoppingBag, Star } from "lucide-react"
 import HomeImageList from "@/components/ui/imagecard"
 import Header from "@/components/header"
 import { addToCart } from "./cart/cart"
-
-
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-
 import { StackedTestimonials } from "@/components/stacked-testimonials"
-import {useState} from 'react'
+import { useState, useEffect } from 'react'
 
-const line=[
+const line = [
   "Blessed Goods for a Faithful Life - Where Quality Meets Christian Values",
   "Inspired Shopping for the Soul - Glorifying God in Every Purchase",
-   "Your Christian Marketplace - Serving with Love, Excellence, and Purpose"
+  "Your Christian Marketplace - Serving with Love, Excellence, and Purpose"
 ]
 
 export default function Home() {
-  let index=0
-  const [tagline,setLine]=useState(line[0])
-  setTimeout(() => {
-   index=index+1
-   setLine(line[index])
-    
-  }, 2000);
-  
+  const [taglineIndex, setTaglineIndex] = useState(0)
+  const [tagline, setTagline] = useState(line[0])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTaglineIndex((prev) => (prev + 1) % line.length)
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    setTagline(line[taglineIndex])
+  }, [taglineIndex])
+
   return (
-    <div className="flex gap-10 w-screen flex-col  min-h-screen">
-      <Header/>
-   
-      <section className="w-full   justify-between text-black  flex items-center bg-[#B5C99A]/20">
-      <div className="mb-10  text-3xl w-full  flex justify-center font-extrabold"><h1 className="w-96">{tagline}</h1></div>
-      <div>
-        <HomeImageList/>
-
+    <div className="flex flex-col min-h-screen">
+      <Header />
       
-    </div>
-
-
+      {/* Hero Section */}
+      <section className="pt-24 pb-12 px-4 bg-gradient-to-b from-[#B5C99A]/20 to-white">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col lg:flex-row items-center gap-8"
+          >
+            <div className="flex-1 text-center lg:text-left">
+              <motion.h1
+                key={tagline}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-4xl md:text-5xl font-bold text-[#718355] leading-tight mb-6"
+              >
+                {tagline}
+              </motion.h1>
+              <p className="text-gray-600 text-lg mb-8">
+                Discover our curated collection of faith-inspired products that bring beauty and meaning to your spiritual journey.
+              </p>
+              <Button
+                className="bg-[#718355] hover:bg-[#5d6c46] text-white px-8 py-3 rounded-full text-lg"
+                asChild
+              >
+                <Link href="/shop">Shop Now</Link>
+              </Button>
+            </div>
+            <div className="flex-1">
+              <HomeImageList />
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Featured Categories */}
-      <section className="w-full flex m-4 justify-center ">
-        <div className="container ">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#718355]">
-                Shop by Category
-              </h2>
-              <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Browse our curated collections of faith-inspired products
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-            {categories.map((category) => (
-              <Link
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#718355] mb-4">
+              Shop by Category
+            </h2>
+            <p className="max-w-2xl mx-auto text-gray-600 text-lg">
+              Browse our curated collections of faith-inspired products
+            </p>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {categories.map((category, index) => (
+              <motion.div
                 key={category.name}
-                href={`/category/${category.slug}`}
-                className="group relative overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
               >
-                <Image
-                  src={category.image || "/placeholder.svg"}
-                  alt={category.name}
-                  width={400}
-                  height={300}
-                  className="h-[200px] w-full object-cover transition-transform group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#718355]/80 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-xl font-bold text-white">{category.name}</h3>
-                </div>
-              </Link>
+                <Link
+                  href={`/category/${category.slug}`}
+                  className="group relative overflow-hidden rounded-lg shadow-lg block"
+                >
+                  <div className="aspect-[4/3] relative">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                      <h3 className="text-2xl font-bold text-white">{category.name}</h3>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="w-full flex  p-4 justify-center  bg-[#B5C99A]/10">
-        <div className="container ">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#718355]">
-                Featured Products
-              </h2>
-              <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Our most popular faith-inspired items
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-            {products.map((product) => (
-              <Link
+      <section className="py-16 px-4 bg-[#B5C99A]/10">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#718355] mb-4">
+              Featured Products
+            </h2>
+            <p className="max-w-2xl mx-auto text-gray-600 text-lg">
+              Our most popular faith-inspired items
+            </p>
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {products.map((product, index) => (
+              <motion.div
                 key={product.id}
-                href={`/product/${product.id}`}
-                className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
               >
-                <div className="aspect-square overflow-hidden">
-                  <Image
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    width={300}
-                    height={300}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg text-[#718355] group-hover:underline">{product.name}</h3>
-                  <div className="flex items-center gap-1 mt-1">
-                    {Array(5)
-                      .fill(null)
-                      .map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < product.rating ? "fill-[#97A97C] text-[#97A97C]" : "fill-gray-200 text-gray-200"
-                          }`}
-                        />
-                      ))}
-                    <span className="text-xs text-gray-500 ml-1">({product.reviews})</span>
+                <Link
+                  href={`/product/${product.id}`}
+                  className="group block overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md"
+                >
+                  <div className="aspect-square overflow-hidden relative">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
                   </div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <p className="font-bold text-[#718355]">${product.price.toFixed(2)}</p>
-                    <Button size="sm" className="bg-[#87986A] hover:bg-[#718355]" >
-                      Add to Cart
-                    </Button>
+                  <div className="p-6">
+                    <h3 className="font-semibold text-lg text-[#718355] group-hover:underline mb-2">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-center gap-1 mb-3">
+                      {Array(5)
+                        .fill(null)
+                        .map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < product.rating
+                                ? "fill-[#97A97C] text-[#97A97C]"
+                                : "fill-gray-200 text-gray-200"
+                            }`}
+                          />
+                        ))}
+                      <span className="text-sm text-gray-500 ml-2">({product.reviews})</span>
+                    </div>
+                    <p className="text-xl font-bold text-[#718355]">${product.price.toFixed(2)}</p>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </motion.div>
             ))}
-          </div>
-          <div className="flex justify-center mt-10">
-            <Button className="bg-[#718355] hover:bg-[#87986A]">View All Products</Button>
           </div>
         </div>
       </section>
 
-      {/* Testimonials - Now with Stacked Cards */}
-      <section className="w-full flex justify-center">
-        <div className="container ">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#718355]">
-                Customer Testimonials
-              </h2>
-              <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mb-12">
-                See what our community has to say about our products
-              </p>
-            </div>
-          </div>
-
-          {/* Stacked Testimonials Component */}
+      {/* Testimonials */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#718355] mb-4">
+              What Our Customers Say
+            </h2>
+            <p className="max-w-2xl mx-auto text-gray-600 text-lg">
+              Read testimonials from our blessed community
+            </p>
+          </motion.div>
           <StackedTestimonials testimonials={testimonials} />
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="w-full flex pt-10 pb-10  justify-center  bg-[#718355]">
-        <div className="container ">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white">
-                Join Our Community
-              </h2>
-              <p className="max-w-[900px] text-white/90 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Subscribe to receive updates, special offers, and spiritual inspiration
-              </p>
-            </div>
-            <div className="w-full max-w-md space-y-2">
-              <form className="flex space-x-2">
-                <input
-                  className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1"
-                  placeholder="Enter your email"
-                  type="email"
-                />
-                <Button className="bg-white text-[#718355] hover:bg-gray-100">Subscribe</Button>
-              </form>
-              <p className="text-xs text-white/70">
-                By subscribing, you agree to our terms and privacy policy. We'll never share your email.
-              </p>
-            </div>
-          </div>
+      {/* Newsletter Section */}
+      <section className="py-16 px-4 bg-[#718355] text-white">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            <h2 className="text-3xl font-bold mb-4">Join Our Community</h2>
+            <p className="text-lg mb-8 text-white/90">
+              Subscribe to receive updates on new products, special offers, and spiritual inspiration.
+            </p>
+            <form className="flex flex-col sm:flex-row gap-4 justify-center">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="px-6 py-3 rounded-full text-gray-900 w-full sm:w-96"
+              />
+              <Button className="bg-white text-[#718355] hover:bg-gray-100 px-8 py-3 rounded-full">
+                Subscribe
+              </Button>
+            </form>
+          </motion.div>
         </div>
       </section>
     </div>
@@ -194,22 +243,22 @@ const categories = [
   {
     name: "Bibles & Books",
     slug: "bibles-books",
-    image: "/bible.jpeg",
+    image: "/categories/bibles-books.jpg",
   },
   {
     name: "Jewelry",
     slug: "jewelry",
-    image: "/cross.jpeg",
+    image: "/categories/jewelry.jpg",
   },
   {
     name: "Home Decor",
     slug: "home-decor",
-    image: "/homed.jpeg",
+    image: "/categories/home-decor.jpg",
   },
   {
     name: "Apparel",
     slug: "apparel",
-    image: "/apparel.webp",
+    image: "/categories/apparel.jpg",
   },
 ]
 
@@ -220,7 +269,7 @@ const products = [
     price: 29.99,
     rating: 5,
     reviews: 124,
-    image: "/cross2.jpeg",
+    image: "/products/wooden-cross-necklace.jpg",
   },
   {
     id: 2,
@@ -228,7 +277,7 @@ const products = [
     price: 19.99,
     rating: 4,
     reviews: 86,
-    image: "/journal.jpeg",
+    image: "/products/scripture-journal.jpg",
   },
   {
     id: 3,
@@ -236,7 +285,7 @@ const products = [
     price: 24.99,
     rating: 5,
     reviews: 52,
-    image: "/faithover.webp",
+    image: "/products/faith-over-fear-shirt.jpg",
   },
   {
     id: 4,
@@ -244,7 +293,7 @@ const products = [
     price: 39.99,
     rating: 5,
     reviews: 37,
-    image: "/icon.jpeg",
+    image: "/products/olive-wood-rosary.jpg",
   },
 ]
 
@@ -253,35 +302,35 @@ const testimonials = [
     name: "Sarah Johnson",
     rating: 5,
     text: "The Scripture Journal has been a blessing in my daily devotional time. The quality is exceptional and the prompts help me dive deeper into God's word.",
-    avatar: "/placeholder.svg?height=50&width=50",
+    avatar: "/avatars/sarah.jpg",
     date: "March 15, 2024",
   },
   {
     name: "Michael Thomas",
     rating: 5,
     text: "I purchased the wooden cross necklace as a gift for my daughter's confirmation. She absolutely loves it and hasn't taken it off since!",
-    avatar: "/placeholder.svg?height=50&width=50",
+    avatar: "/avatars/michael.jpg",
     date: "February 28, 2024",
   },
   {
     name: "Rebecca Wilson",
     rating: 4,
     text: "The Faith Over Fear t-shirt is not only comfortable but also sparks great conversations about my faith. I've already ordered another one!",
-    avatar: "/placeholder.svg?height=50&width=50",
+    avatar: "/avatars/rebecca.jpg",
     date: "April 2, 2024",
   },
   {
     name: "David Martinez",
     rating: 5,
     text: "The olive wood rosary is beautifully crafted and has become an important part of my prayer life. The wood has a wonderful texture and the craftsmanship is excellent.",
-    avatar: "/placeholder.svg?height=50&width=50",
+    avatar: "/avatars/david.jpg",
     date: "April 10, 2024",
   },
   {
     name: "Jennifer Adams",
     rating: 5,
     text: "I bought several items as gifts for my church group, and everyone was thrilled with the quality. The customer service was also exceptional when I needed to make a change to my order.",
-    avatar: "/placeholder.svg?height=50&width=50",
+    avatar: "/avatars/jennifer.jpg",
     date: "March 22, 2024",
   },
 ]
