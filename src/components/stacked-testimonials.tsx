@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Star } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -18,97 +18,160 @@ interface StackedTestimonialsProps {
 }
 
 export function StackedTestimonials({ testimonials }: StackedTestimonialsProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [direction, setDirection] = useState(0)
 
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % testimonials.length)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDirection(1)
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length)
+    }, 5000)
+
+    return () => clearInterval(timer)
+  }, [testimonials.length])
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0
+    })
   }
 
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  const swipeConfidenceThreshold = 10000
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity
+  }
+
+  const paginate = (newDirection: number) => {
+    setDirection(newDirection)
+    setCurrentIndex((prevIndex) => (prevIndex + newDirection + testimonials.length) % testimonials.length)
   }
 
   return (
-    <div className="w-full flex justify-center">
-    <div className="flex justify-center items-center gap-2 w-1/2 ">
-    <button
-    onClick={handlePrev}
-    className="w-10 h-10 rounded-full bg-[#718355] text-white flex items-center justify-center hover:bg-[#87986A] transition-colors"
-  >
-    &larr;
-  </button>
-    <div className="relative  gap-4 w-full max-w-md mx-auto h-[400px]">
-        
-       
-       
-      
-      <AnimatePresence mode="popLayout">
-        {testimonials.map((testimonial, index) => {
-          
-          const position = (index - activeIndex + testimonials.length) % testimonials.length
+    <div className="relative h-[400px] w-full max-w-4xl mx-auto">
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.div
+          key={currentIndex}
+          custom={direction}
+          variants={slideVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            x: { type: "spring", stiffness: 300, damping: 30 },
+            opacity: { duration: 0.2 }
+          }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={1}
+          onDragEnd={(e, { offset, velocity }) => {
+            const swipe = swipePower(offset.x, velocity.x)
 
-          // Only render the top 3 cards for performance
-          if (position > 2) return null
-
-          return (
-            <motion.div
-              key={testimonial.name}
-              initial={{ scale: 0.8, y: 100, opacity: 0 }}
-              animate={{
-                scale: position === 0 ? 1 : 0.9 - position * 0.05,
-                y: position * 30,
-                opacity: 1 - position * 0.2,
-                zIndex: testimonials.length - position,
-              }}
-              exit={{ scale: 0.8, y: -100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="absolute top-0 left-0 right-0 w-full"
-            >
-              <div
-                className={`p-6 rounded-lg shadow-md border border-[#B5C99A]/30 bg-white 
-                  ${position === 0 ? "cursor-default" : "cursor-pointer"}`}
-                onClick={position !== 0 ? handleNext : undefined}
-              >
-                <div className="flex items-center space-x-4 mb-4">
-                  <Image
-                    src={testimonial.avatar || "/placeholder.svg"}
-                    alt={testimonial.name}
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
+            if (swipe < -swipeConfidenceThreshold) {
+              paginate(1)
+            } else if (swipe > swipeConfidenceThreshold) {
+              paginate(-1)
+            }
+          }}
+          className="absolute inset-0"
+        >
+          <div className="bg-white rounded-2xl shadow-xl p-8 mx-4 h-full">
+            <div className="flex flex-col h-full justify-between">
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="relative h-16 w-16 rounded-full overflow-hidden">
+                    <Image
+                      src={testimonials[currentIndex].avatar}
+                      alt={testimonials[currentIndex].name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                   <div>
-                    <h3 className="font-semibold text-[#718355]">{testimonial.name}</h3>
-                    <div className="flex">
-                      {Array(5)
-                        .fill(null)
-                        .map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < testimonial.rating ? "fill-[#97A97C] text-[#97A97C]" : "fill-gray-200 text-gray-200"
-                            }`}
-                          />
-                        ))}
-                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {testimonials[currentIndex].name}
+                    </h3>
+                    <p className="text-sm text-gray-500">{testimonials[currentIndex].date}</p>
                   </div>
                 </div>
-                <p className="text-gray-600 italic">{testimonial.text}</p>
-                <p className="mt-4 text-sm text-gray-500">{testimonial.date}</p>
+                <div className="flex mb-4">
+                  {Array(5)
+                    .fill(null)
+                    .map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-5 w-5 ${
+                          i < testimonials[currentIndex].rating
+                            ? "fill-[#97A97C] text-[#97A97C]"
+                            : "fill-gray-200 text-gray-200"
+                        }`}
+                      />
+                    ))}
+                </div>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  "{testimonials[currentIndex].text}"
+                </p>
               </div>
-            </motion.div>
-          )
-        })}
+              <div className="flex justify-center gap-2 mt-8">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setDirection(index > currentIndex ? 1 : -1)
+                      setCurrentIndex(index)
+                    }}
+                    className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                      index === currentIndex ? "bg-[#718355] w-6" : "bg-gray-300"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </AnimatePresence>
-     
-
       
+      {/* Navigation Arrows */}
+      <button
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-lg text-gray-600 hover:text-[#718355] transition-colors duration-200"
+        onClick={() => paginate(-1)}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+      <button
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-lg text-gray-600 hover:text-[#718355] transition-colors duration-200"
+        onClick={() => paginate(1)}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
     </div>
-     <button
-     onClick={handleNext}
-     className="w-10 h-10 rounded-full bg-[#718355] text-white flex items-center justify-center hover:bg-[#87986A] transition-colors"
-   >
-     &rarr;
-   </button></div></div>
   )
 }
