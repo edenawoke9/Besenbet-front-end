@@ -9,13 +9,13 @@ import { addToCart } from "@/app/cart/cart"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-interface ProductPageProps {
-  params: {
-    id: string
-  }
-}
 
-export default function ProductPage({ params }: ProductPageProps) {
+
+export default function ProductPage({
+  params: { id },
+}: {
+  params: { id: string }
+}) {
   const productId = Number.parseInt(params.id)
 
   // Find the product based on the ID
